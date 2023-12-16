@@ -21,10 +21,17 @@ class _ScanQRState extends State<ScanQR> {
       );
 
       if (response.statusCode == 200) {
+        qrCodeResult = qrData;
         print('Data sent successfully');
+      } else if (response.statusCode == 400) {
+          qrCodeResult = response.body;
+          print('Bad request occurred');
       } else {
         print('Failed to send data');
       }
+
+      setState(() {
+      });
     } catch (error) {
       print('Error sending data: $error');
     }
@@ -64,8 +71,7 @@ class _ScanQRState extends State<ScanQR> {
               onPressed: () async {
                 ScanResult codeSanner = (await BarcodeScanner.scan()) ; //barcode scanner
                 setState(() {
-                  qrCodeResult = codeSanner.rawContent;
-                  sendDataToBackend(qrCodeResult);
+                  sendDataToBackend(codeSanner.rawContent);
                 });
               },
               child: Text("Open Scanner",style: TextStyle(color: Colors.indigo[900]),),
